@@ -5,23 +5,20 @@ class Book:
     def __init__(self, title, author, is_available=True, book_id = None):
         self.title = title.strip().title()
         self.author = author.strip().title()
+        if self.title == "": 
+            raise ValueError("Title can't be empty!")
+
+        if self.author == "":
+            raise ValueError ("Author can't be empty!")
+            
         self.is_available = is_available
         self.book_id = book_id
-    def print_book(self):
-        print(f"Book ID: {self.book_id}")
-        print(f"Title: {self.title}")
-        print(f"Author: {self.author}")
-        print(f"Availability: {self.is_available}")
 
 # class Member 
 class Member(): 
     def __init__(self, name, member_id = None):
         self.name = name.strip().title()
         self.member_id = member_id
-        
-    def print_member(self): 
-        print(f"Member ID: {self.member_id}")
-        print(f"Name: {self.name}")
         
 # class Library 
 class Library:
@@ -75,43 +72,52 @@ class Loan:
 my_library = Library()
 
 def add_a_book(): 
-    title = input("Enter book's title: ")
-    author = input("Enter book's author: ")
-    book = Book(title, author)
+    try: 
+        title = input("Enter book's title: ")
+        author = input("Enter book's author: ")
+        book = Book(title, author)
+    except ValueError as err: 
+        print(err)
+        return None
     return book
 
 def add_a_member(): 
-    name = input("Enter member's name: ")
-    member = Member(name)
+    try:
+        name = input("Enter member's name: ")
+        member = Member(name)
+    except ValueError as err: 
+        print(err)
+        return None
     return member
 
-# define issue_a_book()
 def issue_a_book(): 
-    usr_member_id = int(input("Enter your member ID: "))
-    book_id = int(input("Enter the book id you want to borrow: "))
-    for member in my_library.members: 
-        if member.member_id == usr_member_id: 
-            for book in my_library.books: 
-                if book_id == book.book_id: 
-                    return book, member             
-            return None, None
+    try:
+        usr_member_id = int(input("Enter your member ID: "))
+        book_id = int(input("Enter the book id you want to borrow: "))
+        for member in my_library.members: 
+            if member.member_id == usr_member_id: 
+                for book in my_library.books: 
+                    if book_id == book.book_id: 
+                        return book, member             
+                return None, None
+    except ValueError as err: 
+        print(err)
     return None, None
-    
-# define return_a_book()  
+     
 def return_a_book(): 
-    # book object
-    book_id = int(input("Enter book ID that you want to return: "))
-    for book in my_library.books: 
-        if book.book_id == book_id: 
-            return book
+    try:
+        book_id = int(input("Enter book ID that you want to return: "))
+        for book in my_library.books: 
+            if book.book_id == book_id: 
+                return book
+    except ValueError as err: 
+        print(err)
     return None
 
-# define print_all_books()
 def print_all_books():
     for book in my_library.books: 
         print(f"Book ID: {book.book_id} Title: {book.title} Author: {book.author} Is available: {book.is_available}")
         
-# function for saving books
 def write_books_file():
     l = my_library.books
     new_list = []
@@ -127,7 +133,6 @@ def write_books_file():
     with open('books.json', 'w') as file: 
         json.dump(new_list, file, indent=4)
         
-# unction for saving members
 def write_members_file():
     l = my_library.members
     new_list = []
@@ -140,7 +145,6 @@ def write_members_file():
     with open('members.json', 'w') as file: 
         json.dump(new_list, file, indent=4)
             
-# function for saving loans (issued books)
 def write_loans_file():
     l = my_library.loans
     new_list = []
@@ -153,7 +157,6 @@ def write_loans_file():
     with open('loans.json', 'w') as file: 
         json.dump(new_list, file, indent=4)
 
-# Load all books to books list
 def load_books(): 
     try:
         with open('books.json', 'r') as file: 
@@ -185,12 +188,10 @@ def load_loans():
             for my_dict in list_of_loaded_loans: 
                 my_member = None
                 my_book = None
-                # loop through books
                 for book in my_library.books: 
                     if book.book_id == my_dict["book_id"]: 
                         my_book = book
                         break
-                # loop through members
                 for member in my_library.members: 
                     if member.member_id == my_dict["member_id"]: 
                         my_member = member  
@@ -198,10 +199,10 @@ def load_loans():
                 if my_book is not None and my_member is not None: 
                     loan = Loan(my_book, my_member)
                     my_library.loans.append(loan)
-    except FileNotFoundError : 
+    except FileNotFoundError: 
         print("File doesn't exist!")
+
         
-# menu function
 def menu():
     load_books()
     load_members() 
@@ -218,8 +219,11 @@ def menu():
         }
         for key, value in options.items(): 
             print(f"{key}: {value}")
-        
-        num = int(input(f"Enter any number between 1 - {len(options)}: "))
+        try:
+            num = int(input(f"Enter any number between 1 - {len(options)}: "))
+        except ValueError: 
+            print(f"Invalid input! Please enter a number.")
+            continue
         if num == 1: 
             print("Add book selected!\n")
             my_library.add_book(add_a_book())
@@ -242,7 +246,7 @@ def menu():
             write_loans_file()
             break
         else: 
-            print("Invalid option..")
-               
-menu()
-        
+            print(f"Invalid option! Please select from (+, -, /, *, **): ")
+                
+# menu()      
+

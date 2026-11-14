@@ -2,7 +2,37 @@
     {
         "book_id": 1,
         "title": "Alchemist",
-        "author": "Paulo Choelo",
+        "author": "Paulo Coelho",
+        "is_available": true
+    },
+    {
+        "book_id": 2,
+        "title": "The Kite Runner",
+        "author": "Khaled Hosseini",
+        "is_available": true
+    },
+    {
+        "book_id": 3,
+        "title": "Crime And Punishment",
+        "author": "Fyodor Dostoevsky",
+        "is_available": true
+    },
+    {
+        "book_id": 4,
+        "title": "The Old Man And The Sea",
+        "author": "Ernest Hemingway",
+        "is_available": true
+    },
+    {
+        "book_id": 5,
+        "title": "1984",
+        "author": "George Orwell",
+        "is_available": true
+    },
+    {
+        "book_id": 6,
+        "title": "Little Halley",
+        "author": "Grovey Governer",
         "is_available": true
     }
 ]
